@@ -1,9 +1,10 @@
-
-import Container from "@material-ui/core/Container";
+import Grid from '@material-ui/core/Grid';
+import Container from '@material-ui/core/Container';
+import Typography from "@material-ui/core/Typography";
 
 import { Component } from "react";
 
-import CrimeCard from './components/CrimeCard'
+import CharacterCard from './components/CharacterCard'
 
 
 
@@ -12,19 +13,34 @@ class App extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      crimeList : []
+      characters : []
     }
   }
 
   componentDidMount () {
-    fetch('https://api.fbi.gov/@wanted?pageSize=20&page=1&sort_on=modified&sort_order=desc').then((data) => console.log(data))
+    fetch('https://rickandmortyapi.com/api/character')
+      .then((resp) => resp.json())
+      .then((data) => 
+        this.setState({
+          characters: data.results
+        })
+      )
   }
 
   render() {
     return (
-        <Container>
-            <CrimeCard />
-        </Container>
+      <Container>
+        <Grid container spacing={3}>
+            <Grid item xs={12}>
+            <Typography variant="h2" color="textSecondary" component="p">
+              Rick and morty character
+            </Typography>
+            </Grid>
+            {this.state.characters.map((character) => {
+              return <Grid item xs={4}><CharacterCard character={character} key={character.id}/></Grid>
+            })}
+        </Grid>
+      </Container>
     );
   }
 }

@@ -8,25 +8,29 @@ import Typography from "@material-ui/core/Typography";
 
 import {Component} from "react";
 
-class CrimeCard extends Component {
+class CharacterCard extends Component {
+
+  constructor(props){
+    super(props)
+  }
+
   render() {
     return (
       <Card>
         <CardActionArea>
           <CardMedia
             component="img"
-            alt="Contemplative Reptile"
-            height="140"
-            image="/static/images/cards/contemplative-reptile.jpg"
-            title="Contemplative Reptile"
+            alt="{this.props.character.name}"
+            height="220"
+            image={this.props.character.image}
+            title="{this.props.character.name}"
           />
           <CardContent>
             <Typography gutterBottom variant="h5" component="h2">
-              Lizard
+              {this.props.character.name}
             </Typography>
             <Typography variant="body2" color="textSecondary" component="p">
-              Lizards are a widespread group of squamate reptiles, with over
-              6,000 species, ranging across all continents except Antarctica
+              {this.props.character.status}, {this.props.character.species}, {this.props.character.origin.name}
             </Typography>
           </CardContent>
         </CardActionArea>
@@ -43,4 +47,4 @@ class CrimeCard extends Component {
   }
 }
 
-export default CrimeCard;
+export default CharacterCard;
