@@ -37,8 +37,11 @@ function Home() {
               </Grid>
             );
           })}
+          {
+            !characters || characters.length === 0 ? <Grid item xs={3}><h1>Not Found</h1></Grid> : ''
+          }
           <Grid container item xs={12} justify="center">
-            <Pagination count={info.pages} page={page} onChange={changePage} />
+            { info ? <Pagination count={info.pages} page={page} onChange={changePage} /> : ''}
           </Grid>
         </Grid>
       </Container>
