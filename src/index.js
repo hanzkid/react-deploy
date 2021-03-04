@@ -8,7 +8,8 @@ import App from './App';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles'
-
+import { Provider } from "react-redux";
+import store from "./store";
 
 const theme = createMuiTheme({
   palette: {
@@ -18,7 +19,9 @@ const theme = createMuiTheme({
 ReactDOM.render(
   <ThemeProvider theme={theme}>
     <CssBaseline/>
-    <App />
+    <Provider store={store}>
+      <App />
+    </Provider>
   </ThemeProvider>,
   document.getElementById('root')
 );
