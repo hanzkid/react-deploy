@@ -1,39 +1,47 @@
-import Grid from '@material-ui/core/Grid';
-import Container from '@material-ui/core/Container';
-import Typography from "@material-ui/core/Typography";
-import useFetch from './hooks/useFetch'
-import CharacterCard from './components/CharacterCard'
-import { Pagination } from '@material-ui/lab';
-import { useState } from 'react'
-import banner from './assets/img/banner.jpeg'; // Tell webpack this JS file uses this image
+import React from "react";
+import "./App.css"; // Tell webpack that Button.js uses these styles
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
-function App(){
-  const [page,setPage] = useState(1)
-  const [endpoint, setEndpoint] = useState('/character/?page=' + page);
-  const [characters, info, error] = useFetch(endpoint);
+import Character from "./views/Character";
+import Home from "./views/Home";
+import Favorite from "./views/Favorite";
+import Navbar from "./components/Navbar";
+import Backdrop from "@material-ui/core/Backdrop";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { setLoadingState } from "./store/actions";
 
-  function changePage(event,value) {
-    setPage(value)
-    setEndpoint('/character/?page=' + page)
+export default function App() {
+  const isLoading = useSelector(({ loading }) => loading.isLoading);
+  const querySearch = useSelector(({ character }) => character.querySearch);
+  const page = useSelector(({ character }) => character.page);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(setLoadingState(true));
+  },[page, querySearch,dispatch])
+
+  function loadingBg() {
+    return (
+      <div>
+        <Backdrop open={isLoading}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      </div>
+    );
   }
   return (
-    <Container>
-      <Grid container spacing={3}>
-          <Grid item xs={12}>
-          <img fluid src={banner} />
-          <Typography variant="h2" color="textSecondary" component="p">
-            Rick and morty character
-          </Typography>
-          </Grid>
-          {characters.map((character) => {
-            return <Grid key={character.id} item xs={3}><CharacterCard character={character} key={character.id}/></Grid>
-          })}
-          <Grid container item xs={12} justify="center">
-            <Pagination count={info.pages} page={page} onChange={changePage}/>
-          </Grid>
-      </Grid>
-    </Container>
+    <Router>
+      <Navbar />
+      <Switch>
+        <Route path="/character/:id">
+          <Character />
+        </Route>
+        <Route path="/favorites">
+          <Favorite />
+        </Route>
+        <Route path="/">{isLoading ? loadingBg : <Home />}</Route>
+      </Switch>
+    </Router>
   );
 }
-
-export default App;
